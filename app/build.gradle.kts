@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.google.dagger.hilt.android)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.jetbrains.kotlin.compose)
+    alias(libs.plugins.google.gms.services)
 }
 
 android {
@@ -69,6 +70,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.google.firebase.analytics.ktx)
+    implementation(libs.google.firebase.firestore.ktx)
 
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
