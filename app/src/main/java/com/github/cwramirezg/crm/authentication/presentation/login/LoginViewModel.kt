@@ -26,7 +26,7 @@ class LoginViewModel @Inject constructor(
             LoginEvent.onLogin -> {
                 viewModelScope.launch(dispatcher) {
                     val result = loginUseCases.getLoginUseCase(
-                        state.value.username,
+                        state.value.email,
                         state.value.password
                     )
                     Timber.d("Result: ${result.getOrNull()}")
@@ -40,9 +40,9 @@ class LoginViewModel @Inject constructor(
                 )
             }
 
-            is LoginEvent.updateUsername -> {
+            is LoginEvent.updateEmail -> {
                 _state.value = state.value.copy(
-                    username = event.username,
+                    email = event.email,
                     error = ""
                 )
             }

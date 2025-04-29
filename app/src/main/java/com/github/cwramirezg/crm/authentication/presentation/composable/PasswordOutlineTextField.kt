@@ -18,6 +18,7 @@ import java.util.regex.Pattern
 
 @Composable
 fun PasswordOutlineTextField(
+    text: String = "",
     value: String,
     onValueChange: (text: String) -> Unit,
     modifier: Modifier = Modifier
@@ -34,7 +35,7 @@ fun PasswordOutlineTextField(
                 else -> return@OutlinedTextField
             }
         },
-        label = { Text(text = "Password") },
+        label = { Text(text = text) },
         modifier = modifier,
         isError = !passwordPattern.matcher(value).matches(),
         maxLines = 1,

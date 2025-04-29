@@ -5,6 +5,6 @@ import com.github.cwramirezg.crm.authentication.domain.repository.LoginRepositor
 class GetLoginUseCase(
     private val repository: LoginRepository
 ) {
-    suspend operator fun invoke(username: String, password: String) =
-        repository.login(username, password)
+    suspend operator fun invoke(email: String, password: String) =
+        repository.login(email, password)
 }

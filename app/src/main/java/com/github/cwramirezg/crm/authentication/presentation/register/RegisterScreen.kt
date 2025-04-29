@@ -1,4 +1,4 @@
-package com.github.cwramirezg.crm.authentication.presentation.login
+package com.github.cwramirezg.crm.authentication.presentation.register
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -12,11 +12,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -25,36 +27,35 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.cwramirezg.crm.R
 import com.github.cwramirezg.crm.authentication.presentation.composable.EmailOutlineTextField
+import com.github.cwramirezg.crm.authentication.presentation.composable.ListOutlineTextField
+import com.github.cwramirezg.crm.authentication.presentation.composable.NameOutlineTextField
 import com.github.cwramirezg.crm.ui.theme.CRMTheme
 import com.github.cwramirezg.themovie.authentication.presentation.composable.PasswordOutlineTextField
 
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel(),
+fun RegisterScreen(
+    viewModel: RegisterViewModel = hiltViewModel(),
     onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit
 ) {
     CRMTheme {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
             val state by viewModel.state.collectAsState()
-            Login(
+            Register(
                 state = state,
                 onEvent = { viewModel.onEvent(it) },
                 onLoginSuccess = { onLoginSuccess() },
-                onNavigateToRegister = { onNavigateToRegister() }
             )
         }
     }
 }
 
 @Composable
-fun Login(
-    state: LoginState,
-    onEvent: (LoginEvent) -> Unit,
+fun Register(
+    state: RegisterState,
+    onEvent: (RegisterEvent) -> Unit,
     onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit,
 ) {
     LaunchedEffect(state.isLoggedIn) {
         if (state.isLoggedIn) {
@@ -62,6 +63,7 @@ fun Login(
         }
     }
     Scaffold {
+        var selectedRole by remember { mutableStateOf("student") }
         Column(
             modifier = Modifier
                 .padding(it)
@@ -75,42 +77,47 @@ fun Login(
                 contentDescription = "Logo"
             )
             Text(
-                text = "Inicia sesión",
+                text = "Registrar",
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
+            NameOutlineTextField(
+                value = state.name,
+                onValueChange = { onEvent(RegisterEvent.updateName(it)) },
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                label = "Nombre completo"
+            )
             EmailOutlineTextField(
                 value = state.email,
-                onValueChange = { onEvent(LoginEvent.updateEmail(it)) },
+                onValueChange = { onEvent(RegisterEvent.updateEmail(it)) },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             PasswordOutlineTextField(
                 text = "Contraseña",
                 value = state.password,
-                onValueChange = { onEvent(LoginEvent.updatePassword(it)) },
+                onValueChange = { onEvent(RegisterEvent.updatePassword(it)) },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-            TextButton(
-                onClick = { onNavigateToRegister() },
+            PasswordOutlineTextField(
+                text = "Confirmar contraseña",
+                value = state.confirmPassword,
+                onValueChange = { onEvent(RegisterEvent.updatePassword(it)) },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text("¿No tienes cuenta? Regístrate")
-            }
+            )
+            ListOutlineTextField(
+                options = listOf("Estudiante", "Profesor"),
+                onOptionSelected = { onEvent(RegisterEvent.updateRole(it)) },
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                label = "Rol"
+            )
             Button(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 enabled = state.email.isNotEmpty() && state.password.isNotEmpty(),
                 onClick = {
-                    onEvent(LoginEvent.onLogin)
+                    onEvent(RegisterEvent.submit)
                 }
             ) {
-                Text("Ingresar")
-            }
-            if (state.error.isNotEmpty()) {
-                Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = state.error,
-                    color = MaterialTheme.colorScheme.error
-                )
+                Text("Registrarse")
             }
         }
     }
@@ -118,11 +125,10 @@ fun Login(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginPreview() {
-    Login(
-        state = LoginState(),
+fun RegisterPreview() {
+    Register(
+        state = RegisterState(),
         onEvent = {},
         onLoginSuccess = {},
-        onNavigateToRegister = {}
     )
 }
