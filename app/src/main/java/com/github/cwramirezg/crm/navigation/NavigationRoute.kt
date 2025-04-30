@@ -9,4 +9,4 @@ object Login
 object Register
 
 @Serializable
-object Home
+data class Home(val uid: String)

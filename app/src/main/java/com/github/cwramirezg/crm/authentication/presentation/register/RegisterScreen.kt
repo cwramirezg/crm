@@ -16,9 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -35,7 +32,7 @@ import com.github.cwramirezg.themovie.authentication.presentation.composable.Pas
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel = hiltViewModel(),
-    onLoginSuccess: () -> Unit,
+    onLoginSuccess: (String) -> Unit,
 ) {
     CRMTheme {
         Surface(
@@ -45,7 +42,7 @@ fun RegisterScreen(
             Register(
                 state = state,
                 onEvent = { viewModel.onEvent(it) },
-                onLoginSuccess = { onLoginSuccess() },
+                onLoginSuccess = { onLoginSuccess(it) },
             )
         }
     }
@@ -55,15 +52,14 @@ fun RegisterScreen(
 fun Register(
     state: RegisterState,
     onEvent: (RegisterEvent) -> Unit,
-    onLoginSuccess: () -> Unit,
+    onLoginSuccess: (String) -> Unit,
 ) {
     LaunchedEffect(state.isLoggedIn) {
         if (state.isLoggedIn) {
-            onLoginSuccess()
+            onLoginSuccess(state.uid)
         }
     }
     Scaffold {
-        var selectedRole by remember { mutableStateOf("student") }
         Column(
             modifier = Modifier
                 .padding(it)

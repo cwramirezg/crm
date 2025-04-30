@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.github.cwramirezg.crm.authentication.presentation.login.LoginScreen
 import com.github.cwramirezg.crm.authentication.presentation.register.RegisterScreen
+import com.github.cwramirezg.crm.home.presentation.home.HomeScreen
 
 @Composable
 fun NavigationHost(
@@ -18,14 +19,21 @@ fun NavigationHost(
     ) {
         composable<Login> {
             LoginScreen(
-                onLoginSuccess = {},
+                onLoginSuccess = { uid ->
+                    navHostController.navigate(Home(uid))
+                },
                 onNavigateToRegister = { navHostController.navigate(Register) },
             )
         }
         composable<Register> {
             RegisterScreen(
-                onLoginSuccess = {},
+                onLoginSuccess = { uid ->
+                    navHostController.navigate(Home(uid))
+                },
             )
+        }
+        composable<Home> {
+            HomeScreen()
         }
     }
 }

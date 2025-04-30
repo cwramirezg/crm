@@ -29,7 +29,13 @@ class LoginViewModel @Inject constructor(
                         state.value.email,
                         state.value.password
                     )
-                    Timber.d("Result: ${result.getOrNull()}")
+                    result.getOrNull()?.also { user ->
+                        _state.value = state.value.copy(
+                            uid = user.uid,
+                            isLoggedIn = true,
+                        )
+                        Timber.d("Result: ${user.uid}")
+                    }
                 }
             }
 

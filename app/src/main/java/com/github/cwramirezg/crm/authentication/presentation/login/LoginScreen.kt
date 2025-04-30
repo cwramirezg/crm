@@ -31,7 +31,7 @@ import com.github.cwramirezg.themovie.authentication.presentation.composable.Pas
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    onLoginSuccess: () -> Unit,
+    onLoginSuccess: (String) -> Unit,
     onNavigateToRegister: () -> Unit
 ) {
     CRMTheme {
@@ -42,7 +42,7 @@ fun LoginScreen(
             Login(
                 state = state,
                 onEvent = { viewModel.onEvent(it) },
-                onLoginSuccess = { onLoginSuccess() },
+                onLoginSuccess = { onLoginSuccess(it) },
                 onNavigateToRegister = { onNavigateToRegister() }
             )
         }
@@ -53,12 +53,12 @@ fun LoginScreen(
 fun Login(
     state: LoginState,
     onEvent: (LoginEvent) -> Unit,
-    onLoginSuccess: () -> Unit,
+    onLoginSuccess: (String) -> Unit,
     onNavigateToRegister: () -> Unit,
 ) {
     LaunchedEffect(state.isLoggedIn) {
         if (state.isLoggedIn) {
-            onLoginSuccess()
+            onLoginSuccess(state.uid)
         }
     }
     Scaffold {
