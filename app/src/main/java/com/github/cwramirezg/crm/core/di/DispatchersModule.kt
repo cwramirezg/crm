@@ -1,4 +1,4 @@
-package com.github.cwramirezg.crm.core
+package com.github.cwramirezg.crm.core.di
 
 import dagger.Module
 import dagger.Provides

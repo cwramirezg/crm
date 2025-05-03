@@ -2,9 +2,10 @@ package com.github.cwramirezg.crm.home.presentation.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -13,10 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.cwramirezg.crm.ui.theme.CRMTheme
+import timber.log.Timber
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    onNavigateToTeacher: (String) -> Unit,
+    onNavigateToStudent: (String) -> Unit,
 ) {
     CRMTheme {
         Surface(
@@ -25,7 +29,9 @@ fun HomeScreen(
             val state by viewModel.state.collectAsState()
             Home(
                 state = state,
-                onEvento = { viewModel.onEvent(it) }
+                onEvent = { viewModel.onEvent(it) },
+                onNavigateToTeacher = { onNavigateToTeacher(it) },
+                onNavigateToStudent = { onNavigateToStudent(it) }
             )
         }
     }
@@ -34,31 +40,34 @@ fun HomeScreen(
 @Composable
 fun Home(
     state: HomeState,
-    onEvento: (HomeEvent) -> Unit,
+    onEvent: (HomeEvent) -> Unit,
+    onNavigateToTeacher: (String) -> Unit,
+    onNavigateToStudent: (String) -> Unit,
 ) {
-    LaunchedEffect(null) {
-        onEvento(HomeEvent.fetchUserRole)
+    LaunchedEffect(Unit) {
+        onEvent(HomeEvent.fetchUserRole)
     }
-    when (state.rol) {
-        "" -> {
-            Box(
-                Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+    LaunchedEffect(state.rol) {
+        when (state.rol) {
+            "teacher" -> {
+                Timber.d("teacher: ${state.uid}")
+                onNavigateToTeacher(state.uid)
+            }
+
+            "student" -> {
+                Timber.d("student: ${state.uid}")
+                onNavigateToStudent(state.uid)
             }
         }
-
-        "Profesor" -> {
-            Text("profesor")
-        }
-
-        "Estudiante" -> {
-            Text("estudiante")
-        }
-
-        else -> {
-            Text("Rol desconocido")
+    }
+    Scaffold {
+        Box(
+            Modifier
+                .padding(it)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
         }
     }
 }

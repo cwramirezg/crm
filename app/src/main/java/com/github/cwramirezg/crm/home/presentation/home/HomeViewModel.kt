@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.github.cwramirezg.crm.core.IoDispatcher
+import com.github.cwramirezg.crm.core.di.IoDispatcher
 import com.github.cwramirezg.crm.home.domain.home.usecase.HomeUseCases
 import com.github.cwramirezg.crm.navigation.Home
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,10 +31,15 @@ class HomeViewModel @Inject constructor(
         when (event) {
             HomeEvent.fetchUserRole -> {
                 viewModelScope.launch(dispatcher) {
-                    homeUseCases.getRolUseCase(home.uid) { success, rol ->
+                    Timber.d("uid: ${home.uid}")
+                    homeUseCases.getRolUseCase(
+                        uid = home.uid
+                    ) { success, rol ->
+                        Timber.d("success: ${success}")
                         if (success) {
                             _state.value = state.value.copy(
-                                rol = rol
+                                rol = rol,
+                                uid = home.uid
                             )
                         }
                     }

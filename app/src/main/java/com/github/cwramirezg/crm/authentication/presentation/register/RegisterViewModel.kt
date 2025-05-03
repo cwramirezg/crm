@@ -3,7 +3,7 @@ package com.github.cwramirezg.crm.authentication.presentation.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.cwramirezg.crm.authentication.domain.register.usecase.RegisterUseCases
-import com.github.cwramirezg.crm.core.IoDispatcher
+import com.github.cwramirezg.crm.core.di.IoDispatcher
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

@@ -3,7 +3,7 @@ package com.github.cwramirezg.crm.authentication.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.cwramirezg.crm.authentication.domain.login.usecase.LoginUseCases
-import com.github.cwramirezg.crm.core.IoDispatcher
+import com.github.cwramirezg.crm.core.di.IoDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -7,6 +7,10 @@ import androidx.navigation.compose.composable
 import com.github.cwramirezg.crm.authentication.presentation.login.LoginScreen
 import com.github.cwramirezg.crm.authentication.presentation.register.RegisterScreen
 import com.github.cwramirezg.crm.home.presentation.home.HomeScreen
+import com.github.cwramirezg.crm.teacher.presentation.course.CourseScreen
+import com.github.cwramirezg.crm.teacher.presentation.create.CreateScreen
+import com.github.cwramirezg.crm.teacher.presentation.home.HomeTeacherScreen
+import com.github.cwramirezg.crm.teacher.presentation.student.StudentScreen
 
 @Composable
 fun NavigationHost(
@@ -33,7 +37,34 @@ fun NavigationHost(
             )
         }
         composable<Home> {
-            HomeScreen()
+            HomeScreen(
+                onNavigateToTeacher = { uid ->
+                    navHostController.navigate(HomeTeacher(uid))
+                },
+                onNavigateToStudent = {
+
+                }
+            )
+        }
+        composable<HomeTeacher> {
+            HomeTeacherScreen(
+                onNavigateToCourse = {
+                    navHostController.navigate(Course(it))
+                }
+            )
+        }
+        composable<CreateCourse> {
+            CreateScreen()
+        }
+        composable<Course> {
+            CourseScreen(
+                onNavigateToSelectStudent = {
+                    navHostController.navigate(Student(it))
+                }
+            )
+        }
+        composable<Student> {
+            StudentScreen()
         }
     }
 }
