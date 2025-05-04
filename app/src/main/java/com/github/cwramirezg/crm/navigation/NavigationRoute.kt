@@ -9,13 +9,13 @@ object Login
 object Register
 
 @Serializable
-data class Home(val uid: String)
+data class Home(val uidUser: String)
 
 @Serializable
-data class HomeTeacher(val uid: String)
+data class HomeTeacher(val uidUser: String)
 
 @Serializable
-data class CreateCourse(val uid: String)
+data class CreateCourse(val uidUser: String)
 
 @Serializable
 data class Course(val uid: String)

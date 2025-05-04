@@ -4,12 +4,13 @@ import com.github.cwramirezg.crm.core.data.model.Course
 import com.github.cwramirezg.crm.core.data.model.User
 import com.github.cwramirezg.crm.teacher.domain.repository.TeacherRepository
 import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class TeacherRepositoryImpl(
     val firestore: FirebaseFirestore
 ) : TeacherRepository {
-    override suspend fun create(
+    override suspend fun createCourse(
         name: String,
         description: String,
         createdBy: String,
@@ -25,6 +26,9 @@ class TeacherRepositoryImpl(
             .addOnCompleteListener { task ->
                 onComplete(task.isSuccessful, task.exception?.message ?: "")
             }
+            .addOnFailureListener {
+                onComplete(false, it.message ?: "")
+            }
     }
 
     override suspend fun getCourses(
@@ -39,6 +43,9 @@ class TeacherRepositoryImpl(
                     Course.fromDoc(it)
                 }
                 onComplete(courses)
+            }
+            .addOnFailureListener {
+                onComplete(emptyList())
             }
     }
 
@@ -80,6 +87,22 @@ class TeacherRepositoryImpl(
             }
             .addOnFailureListener {
                 onComplete(emptyList())
+            }
+    }
+
+    override suspend fun addStudentToCourse(
+        courseId: String,
+        studentId: String,
+        onComplete: (Boolean, String) -> Unit
+    ) {
+        firestore.collection("courses")
+            .document(courseId)
+            .update("students", FieldValue.arrayUnion(studentId))
+            .addOnSuccessListener {
+                onComplete(true, "Estudiante agregado exitosamente")
+            }
+            .addOnFailureListener { e ->
+                onComplete(false, "Error al agregar estudiante: ${e.message}")
             }
     }
 }

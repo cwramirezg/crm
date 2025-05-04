@@ -34,6 +34,7 @@ class CourseViewModel @Inject constructor(
                         course.uid
                     ) {
                         _state.value = state.value.copy(
+                            courseId = course.uid,
                             students = it
                         )
                     }

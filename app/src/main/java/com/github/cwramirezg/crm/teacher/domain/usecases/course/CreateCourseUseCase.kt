@@ -1,8 +1,8 @@
-package com.github.cwramirezg.crm.teacher.domain.usecases.create
+package com.github.cwramirezg.crm.teacher.domain.usecases.course
 
 import com.github.cwramirezg.crm.teacher.domain.repository.TeacherRepository
 
-class CreateUseCase(
+class CreateCourseUseCase(
     private val repository: TeacherRepository
 ) {
     suspend operator fun invoke(
@@ -10,5 +10,5 @@ class CreateUseCase(
         description: String,
         createdBy: String,
         onComplete: (Boolean, String) -> Unit
-    ) = repository.create(name, description, createdBy, onComplete)
+    ) = repository.createCourse(name, description, createdBy, onComplete)
 }

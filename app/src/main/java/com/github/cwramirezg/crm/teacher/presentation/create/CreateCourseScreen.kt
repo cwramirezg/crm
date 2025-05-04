@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -23,27 +24,35 @@ import com.github.cwramirezg.crm.authentication.presentation.composable.NameOutl
 import com.github.cwramirezg.crm.ui.theme.CRMTheme
 
 @Composable
-fun CreateScreen(
-    viewModel: CreateViewModel = hiltViewModel()
+fun CreateCourseScreen(
+    viewModel: CreateCourseViewModel = hiltViewModel(),
+    onSuccessCreate: (String) -> Unit,
 ) {
     CRMTheme {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
             val state by viewModel.state.collectAsState()
-            Create(
+            CreateCourse(
                 state = state,
-                onEvent = { viewModel.onEvent(it) }
+                onEvent = { viewModel.onEvent(it) },
+                onSuccessCreate = { onSuccessCreate(it) },
             )
         }
     }
 }
 
 @Composable
-fun Create(
-    state: CreateState,
-    onEvent: (CreateEvent) -> Unit,
+fun CreateCourse(
+    state: CreateCourseState,
+    onEvent: (CreateCourseEvent) -> Unit,
+    onSuccessCreate: (String) -> Unit,
 ) {
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess) {
+            onSuccessCreate(state.uidUser)
+        }
+    }
     Scaffold {
         Column(
             modifier = Modifier
@@ -59,13 +68,13 @@ fun Create(
             )
             NameOutlineTextField(
                 value = state.name,
-                onValueChange = { onEvent(CreateEvent.updateName(it)) },
+                onValueChange = { onEvent(CreateCourseEvent.updateName(it)) },
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 label = "Nombre"
             )
             NameOutlineTextField(
                 value = state.description,
-                onValueChange = { onEvent(CreateEvent.updateDescription(it)) },
+                onValueChange = { onEvent(CreateCourseEvent.updateDescription(it)) },
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 label = "Descripción"
             )
@@ -73,7 +82,7 @@ fun Create(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 enabled = state.name.isNotEmpty() && state.description.isNotEmpty(),
                 onClick = {
-                    onEvent(CreateEvent.createCourse)
+                    onEvent(CreateCourseEvent.createCourse)
                 }
             ) {
                 Text("Crear")
@@ -85,8 +94,9 @@ fun Create(
 @Preview(showBackground = true)
 @Composable
 fun CoursePreview() {
-    Create(
-        state = CreateState(),
-        onEvent = {}
+    CreateCourse(
+        state = CreateCourseState(),
+        onEvent = {},
+        onSuccessCreate = {},
     )
 }

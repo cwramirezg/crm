@@ -4,7 +4,7 @@ import com.github.cwramirezg.crm.core.data.model.Course
 import com.github.cwramirezg.crm.core.data.model.User
 
 interface TeacherRepository {
-    suspend fun create(
+    suspend fun createCourse(
         name: String,
         description: String,
         createdBy: String,
@@ -23,5 +23,11 @@ interface TeacherRepository {
 
     suspend fun getAllStudents(
         onComplete: (List<User>) -> Unit
+    )
+
+    suspend fun addStudentToCourse(
+        courseId: String,
+        studentId: String,
+        onComplete: (Boolean, String) -> Unit
     )
 }

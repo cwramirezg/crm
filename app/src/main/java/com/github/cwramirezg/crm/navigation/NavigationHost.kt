@@ -8,7 +8,7 @@ import com.github.cwramirezg.crm.authentication.presentation.login.LoginScreen
 import com.github.cwramirezg.crm.authentication.presentation.register.RegisterScreen
 import com.github.cwramirezg.crm.home.presentation.home.HomeScreen
 import com.github.cwramirezg.crm.teacher.presentation.course.CourseScreen
-import com.github.cwramirezg.crm.teacher.presentation.create.CreateScreen
+import com.github.cwramirezg.crm.teacher.presentation.create.CreateCourseScreen
 import com.github.cwramirezg.crm.teacher.presentation.home.HomeTeacherScreen
 import com.github.cwramirezg.crm.teacher.presentation.student.StudentScreen
 
@@ -23,23 +23,25 @@ fun NavigationHost(
     ) {
         composable<Login> {
             LoginScreen(
-                onLoginSuccess = { uid ->
-                    navHostController.navigate(Home(uid))
+                onLoginSuccess = { uidUser ->
+                    navHostController.popBackStack()
+                    navHostController.navigate(Home(uidUser))
                 },
                 onNavigateToRegister = { navHostController.navigate(Register) },
             )
         }
         composable<Register> {
             RegisterScreen(
-                onLoginSuccess = { uid ->
-                    navHostController.navigate(Home(uid))
+                onLoginSuccess = { uidUser ->
+                    navHostController.navigate(Home(uidUser))
                 },
             )
         }
         composable<Home> {
             HomeScreen(
-                onNavigateToTeacher = { uid ->
-                    navHostController.navigate(HomeTeacher(uid))
+                onNavigateToTeacher = { uidUser ->
+                    navHostController.popBackStack()
+                    navHostController.navigate(HomeTeacher(uidUser))
                 },
                 onNavigateToStudent = {
 
@@ -50,11 +52,19 @@ fun NavigationHost(
             HomeTeacherScreen(
                 onNavigateToCourse = {
                     navHostController.navigate(Course(it))
+                },
+                onNavigateToCreateCourse = { uidUser ->
+                    navHostController.navigate(CreateCourse(uidUser))
                 }
             )
         }
         composable<CreateCourse> {
-            CreateScreen()
+            CreateCourseScreen(
+                onSuccessCreate = { uidUser ->
+                    navHostController.popBackStack()
+                    navHostController.navigate(HomeTeacher(uidUser))
+                }
+            )
         }
         composable<Course> {
             CourseScreen(

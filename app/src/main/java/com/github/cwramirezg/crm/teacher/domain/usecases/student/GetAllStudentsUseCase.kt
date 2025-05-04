@@ -1,4 +1,4 @@
-package com.github.cwramirezg.crm.teacher.domain.usecases.students
+package com.github.cwramirezg.crm.teacher.domain.usecases.student
 
 import com.github.cwramirezg.crm.core.data.model.User
 import com.github.cwramirezg.crm.teacher.domain.repository.TeacherRepository

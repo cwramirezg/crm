@@ -9,9 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,31 +35,44 @@ import com.github.cwramirezg.crm.ui.theme.CRMTheme
 fun HomeTeacherScreen(
     viewModel: HomeTeacherViewModel = hiltViewModel(),
     onNavigateToCourse: (String) -> Unit,
+    onNavigateToCreateCourse: (String) -> Unit,
 ) {
     CRMTheme {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
             val state by viewModel.state.collectAsState()
-            Home(
+            HomeTeacher(
                 state = state,
                 onEvent = { viewModel.onEvent(it) },
                 onNavigateToCourse = { onNavigateToCourse(it) },
+                onNavigateToCreateCourse = { onNavigateToCreateCourse(it) }
             )
         }
     }
 }
 
 @Composable
-fun Home(
+fun HomeTeacher(
     state: HomeTeacherState,
     onEvent: (HomeTeacherEvent) -> Unit,
     onNavigateToCourse: (String) -> Unit,
+    onNavigateToCreateCourse: (String) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         onEvent(HomeTeacherEvent.getCourses)
     }
-    Scaffold {
+    Scaffold(
+        floatingActionButton = {
+            SmallFloatingActionButton(
+                onClick = {
+                    onNavigateToCreateCourse(state.uidUser)
+                }
+            ) {
+                Icon(Icons.Filled.Add, "Crear curso")
+            }
+        }
+    ) {
         Column(
             modifier = Modifier
                 .padding(it)
@@ -91,8 +108,8 @@ fun Home(
 
 @Preview(showBackground = true)
 @Composable
-fun HomePreview() {
-    Home(
+fun HomeTeacherPreview() {
+    HomeTeacher(
         state = HomeTeacherState(
             courses = listOf(
                 Course("1", "Curso 1", "Descripción 1", "1", emptyList()),
@@ -100,6 +117,7 @@ fun HomePreview() {
             )
         ),
         onEvent = {},
-        onNavigateToCourse = {}
+        onNavigateToCourse = {},
+        onNavigateToCreateCourse = {}
     )
 }

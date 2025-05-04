@@ -31,15 +31,15 @@ class HomeViewModel @Inject constructor(
         when (event) {
             HomeEvent.fetchUserRole -> {
                 viewModelScope.launch(dispatcher) {
-                    Timber.d("uid: ${home.uid}")
+                    Timber.d("uid: ${home.uidUser}")
                     homeUseCases.getRolUseCase(
-                        uid = home.uid
+                        uid = home.uidUser
                     ) { success, rol ->
                         Timber.d("success: ${success}")
                         if (success) {
                             _state.value = state.value.copy(
                                 rol = rol,
-                                uid = home.uid
+                                uid = home.uidUser
                             )
                         }
                     }

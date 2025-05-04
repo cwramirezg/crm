@@ -26,13 +26,17 @@ class HomeTeacherViewModel @Inject constructor(
 
     private val homeTeacher = savedStateHandle.toRoute<HomeTeacher>()
 
+    init {
+        _state.value = state.value.copy(
+            uidUser = homeTeacher.uidUser
+        )
+    }
+
     fun onEvent(event: HomeTeacherEvent) {
         when (event) {
             HomeTeacherEvent.getCourses -> {
                 viewModelScope.launch(dispatcher) {
-                    usecase.getCourses(
-                        homeTeacher.uid
-                    ) {
+                    usecase.getCourses(state.value.uidUser) {
                         _state.value = state.value.copy(
                             courses = it
                         )
